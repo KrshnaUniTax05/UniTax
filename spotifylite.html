@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube URL to Webhook Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Send YouTube URL to Webhook</h1>
+        <input type="text" id="videoUrl" placeholder="Enter YouTube Video URL" />
+        <button onclick="sendData()">Send Video URL</button>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        // Your Make Webhook URL
+        const webhookUrl = 'https://hook.eu2.make.com/8cb7do3ja6dynsjwhynour5d4wf3229p';
+
+       // Function to send data to Make Webhook
+function sendData() {
+    const videoUrl = document.getElementById('videoUrl').value.trim();
+    const messageElement = document.getElementById('message');
+
+    if (!videoUrl) {
+        messageElement.textContent = 'Please enter a YouTube URL.';
+        messageElement.style.color = 'red';
+        return;
+    }
+
+    // Webhook URL
+    const webhookUrl = 'https://hook.eu2.make.com/8cb7do3ja6dynsjwhynour5d4wf3229p?url=' + encodeURIComponent(videoUrl);
+
+    // Send data using fetch
+    fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            videoUrl: videoUrl
+        })
+    })
+    .then(response => {
+        // Handle the response as text
+        return response.text().then(text => {
+            try {
+                // Try to parse the response as JSON, but handle text if JSON parsing fails
+                return JSON.parse(text);
+            } catch (error) {
+                // Return text if parsing fails
+                return text;
+            }
+        });
+    })
+    .then(data => {
+        // Handle the data based on its format
+        if (typeof data === 'string') {
+            // If the response is plain text, display it
+            messageElement.textContent = `Response: ${data}`;
+            messageElement.style.color = 'green';
+        } else {
+            // If the response is a valid JSON, handle accordingly
+            messageElement.textContent = 'Video URL sent successfully!';
+            messageElement.style.color = 'green';
+        }
+    })
+    .catch(error => {
+        // Handle any error during the fetch request
+        messageElement.textContent = 'Error sending data: ' + error;
+        messageElement.style.color = 'red';
+    });
+}
+    </script>
+
+</body>
+</html>

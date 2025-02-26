@@ -1,0 +1,522 @@
+
+
+
+
+
+var form = document.getElementById("customercreationform");
+console.log(form)
+let fieldCount = 1;
+sheetcreation();
+
+form.addEventListener("submit", async function (event) {
+  event.preventDefault();
+  submitForm()
+  const formData = new FormData(event.target);
+  const data = Object.fromEntries(formData);
+
+  // Create a query string from the data
+  const queryString = new URLSearchParams(data).toString();
+
+  // Use JSONP by adding a callback parameter
+  const scriptURL = "https://script.google.com/macros/s/AKfycby-yBoXzgchQG_TCZYTpJ4MjQnWDNz3cMtSj9fAU0bxk3gjpXtFllm3jo3fppvhk4ny/exec" + "?callback=handleResponse&" + queryString;
+
+  // Dynamically add a script tag to make the JSONP request
+  const script = document.createElement("script");
+  script.src = scriptURL;
+  document.body.appendChild(script);
+});
+
+function sheetcreation() {
+  // Get the value of the 'userid' input field
+  var x = document.getElementById('userid').value;
+
+  // Get the form containing the 'sheet_name' input field
+  // var form = document.getElementById('yourFormId'); // Replace 'yourFormId' with the actual form ID
+
+  // Find the 'sheet_name' input field within the specified form
+  var input = form.querySelector('#sheet_name');
+
+  // Generate the new value
+  var z = x + "_" + "GL";
+
+  // Set the generated value in the 'sheet_name' input field
+  input.value = z;
+
+  // Log the new value
+  console.log(z);
+
+  // Get the value of the input and log it (confirming it has been set correctly)
+  var a = input.value;
+  console.log(a);
+}
+
+
+
+// Handle the JSONP response
+function handleResponse(response) {
+  if (response.status === "success") {
+    alert("Data submitted successfully! \nLine Item Created: " + response.document_number );
+  } else {
+    alert("Error: " + response.message);
+  }
+}
+
+
+
+// comment update
+
+function addToCommentTable() {
+    event.preventDefault();
+    const commentInput = document.getElementById("comments"); // Get the input field
+    const comment = commentInput.value.trim(); // Get the value and trim any whitespace
+    const tableBody = document.querySelector("#commentTable tbody"); // Get the table body
+  
+    if (comment) {
+      // Get the next Sr. No.
+      const rowCount = tableBody.rows.length + 1;
+  
+      // Create a new row
+      const row = document.createElement("tr");
+  
+      // Create Sr. No. cell
+      const srCell = document.createElement("td");
+      srCell.textContent = rowCount;
+  
+      // Create Narration cell
+      const narrationCell = document.createElement("td");
+      narrationCell.textContent = comment;
+  
+      // Append cells to the row
+      row.appendChild(srCell);
+      row.appendChild(narrationCell);
+  
+      // Append the row to the table body
+      tableBody.appendChild(row);
+  
+      // Clear the input field
+      commentInput.value = "";
+    } else {
+      alert("Please enter a comment before adding.");
+    }
+  }
+  
+// table li to input feild while submitting.
+  function processInclusiveAll() {
+    // Find all elements with IDs containing "inclusiveall"
+    const inclusiveElements = document.querySelectorAll('[id*="inclusiveall"]');
+    
+    inclusiveElements.forEach((element) => {
+      // Find the associated table (if exists) inside the same form
+      const table = element.closest("form").querySelector("table");
+      
+      if (table) {
+        // Get all <li> elements within the table body
+        const rows = table.querySelectorAll("tbody tr td:nth-child(2)"); // Assuming narration is in the second column
+        
+        // Extract text content from rows and join them with a comma
+        const mergedContent = Array.from(rows)
+          .map(row => row.textContent.trim())
+          .filter(content => content) // Remove empty content
+          .join(", ");
+        
+        // Set the merged content as the value of the parent input (e.g., comments field)
+        comment.value = mergedContent;
+      }
+    });
+  }
+  
+
+//   merging row
+
+function submitForm() {
+    const tableBody = document.querySelector("#commentTable tbody"); // Get the table body
+    const rows = tableBody.querySelectorAll("tr"); // Get all rows in the table body
+  
+    // Collect the narrations (second column of each row) and join them with commas
+    const mergedContent = Array.from(rows)
+      .map(row => row.querySelector("td:nth-child(2)").textContent.trim())
+      .filter(content => content) // Remove empty content
+      .join(", ");
+  
+    // Set the merged content as the value of the 'comment' field
+    const commentField = document.getElementById("comment");
+    if (commentField) {
+      commentField.value = mergedContent;
+    }
+  
+    // Optionally, submit the form here (e.g., if you want to submit the form via AJAX or as normal)
+    // document.querySelector("form").submit(); // Uncomment if you want to submit the form
+  }
+
+
+
+
+
+  // ?action=getColumnData&sheet_name=Sheet1&column_name=Product&callback=handleResponse
+
+
+
+  // ?action=getRowData&sheet_name=Sheet1&column_to_search=Document&document_number=12345&callback=handleResponse
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- new js -->
+
+  // Event listener for form submission
+console.log()
+
+
+document.querySelectorAll('.tosend').forEach(form => {
+  form.addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent default form submission
+      // Get the ID of the form
+      const formId = event.target.id;
+      var formElement = document.getElementById(formId);
+      console.log(formElement)
+      const formIdtoreset = event.target.id;
+      
+      // Dynamically add hidden fields
+      const userid = document.querySelector("#userid").value;  // Example: You can set this dynamically as needed
+      const formidInput = document.createElement('input');
+      formidInput.type = 'hidden';
+      formidInput.name = 'sheet_name';
+      formidInput.value = userid+"_"+formId;
+      form.appendChild(formidInput);
+      
+
+      const useridInput = document.createElement('input');
+      useridInput.type = 'hidden';
+      useridInput.name = 'userid'; 
+      useridInput.value = userid;  // Example: Add user data dynamically
+      form.appendChild(useridInput);
+
+      // Ensure all form fields are included (including dynamically added ones)
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData);
+
+      // Create a query string from the data
+      const queryString = new URLSearchParams(data).toString();
+      
+      // Log the data for debugging
+      console.log('Form Data:', data);
+      console.log('Query String:', queryString);
+
+      // Use JSONP by adding a callback parameter
+      const scriptURL = "https://script.google.com/macros/s/AKfycby-yBoXzgchQG_TCZYTpJ4MjQnWDNz3cMtSj9fAU0bxk3gjpXtFllm3jo3fppvhk4ny/exec" + "?callback=handleResponse&" + queryString;
+
+      // Dynamically add a script tag to make the JSONP request
+      const script = document.createElement("script");
+      script.src = scriptURL;
+      document.body.appendChild(script);
+      formElement.reset(); 
+  });
+});
+
+// Handle the JSONP response
+
+formElement.reset();
+
+// comment update
+
+function addToCommentTable() {
+    event.preventDefault();
+    const commentInput = document.getElementById("comments"); // Get the input field
+    const comment = commentInput.value.trim(); // Get the value and trim any whitespace
+    const tableBody = document.querySelector("#commentTable tbody"); // Get the table body
+  
+    if (comment) {
+      // Get the next Sr. No.
+      const rowCount = tableBody.rows.length + 1;
+  
+      // Create a new row
+      const row = document.createElement("tr");
+  
+      // Create Sr. No. cell
+      const srCell = document.createElement("td");
+      srCell.textContent = rowCount;
+  
+      // Create Narration cell
+      const narrationCell = document.createElement("td");
+      narrationCell.textContent = comment;
+  
+      // Append cells to the row
+      row.appendChild(srCell);
+      row.appendChild(narrationCell);
+  
+      // Append the row to the table body
+      tableBody.appendChild(row);
+  
+      // Clear the input field
+      commentInput.value = "";
+    } else {
+      alert("Please enter a comment before adding.");
+    }
+  }
+  
+// table li to input feild while submitting.
+  function processInclusiveAll() {
+    // Find all elements with IDs containing "inclusiveall"
+    const inclusiveElements = document.querySelectorAll('[id*="inclusiveall"]');
+    
+    inclusiveElements.forEach((element) => {
+      // Find the associated table (if exists) inside the same form
+      const table = element.closest("form").querySelector("table");
+      
+      if (table) {
+        // Get all <li> elements within the table body
+        const rows = table.querySelectorAll("tbody tr td:nth-child(2)"); // Assuming narration is in the second column
+        
+        // Extract text content from rows and join them with a comma
+        const mergedContent = Array.from(rows)
+          .map(row => row.textContent.trim())
+          .filter(content => content) // Remove empty content
+          .join(", ");
+        
+        // Set the merged content as the value of the parent input (e.g., comments field)
+        comment.value = mergedContent;
+      }
+    });
+  }
+  
+
+//   merging row
+
+function submitForm() {
+    const tableBody = document.querySelector("#commentTable tbody"); // Get the table body
+    const rows = tableBody.querySelectorAll("tr"); // Get all rows in the table body
+  
+    // Collect the narrations (second column of each row) and join them with commas
+    const mergedContent = Array.from(rows)
+      .map(row => row.querySelector("td:nth-child(2)").textContent.trim())
+      .filter(content => content) // Remove empty content
+      .join(", ");
+  
+    // Set the merged content as the value of the 'comment' field
+    const commentField = document.getElementById("comment");
+    if (commentField) {
+      commentField.value = mergedContent;
+    }
+  
+    // Optionally, submit the form here (e.g., if you want to submit the form via AJAX or as normal)
+    // document.querySelector("form").submit(); // Uncomment if you want to submit the form
+  }
+
+
+
+
+
+  // ?action=getColumnData&sheet_name=Sheet1&column_name=Product&callback=handleResponse
+
+
+
+  // ?action=getRowData&sheet_name=Sheet1&column_to_search=Document&document_number=12345&callback=handleResponse
+
+
+
+
+
+
+
+
+// Checking feild values from server
+
+  // Variable to store the timeout ID for debouncing
+
+
+// Variable to store the timeout ID for debouncing
+
+
+// Function to be called after the user stops typing
+function serversideChecking(value, formId) {
+  console.log('User Input Value:', value);
+  console.log('Form ID:', formId);
+  
+  // Setup the API call with necessary parameters (the Sheet name and column name)
+  const sheet_name = userId + "_" + formId;  // Adjust this based on your sheet name
+  const column_name = "Company Code";  // Adjust this based on the column you're checking
+
+  // Construct the query string for the API call
+  const queryString = `?action=getColumnData&sheet_name=${sheet_name}&column_name=${column_name}&callback=handleResponse`;
+
+  // Use JSONP by adding a callback parameter
+  const scriptURL = "https://script.google.com/macros/s/AKfycby-yBoXzgchQG_TCZYTpJ4MjQnWDNz3cMtSj9fAU0bxk3gjpXtFllm3jo3fppvhk4ny/exec" + queryString;
+  console.log(scriptURL);
+
+  // Dynamically add a script tag to make the JSONP request
+  const script = document.createElement("script");
+  script.src = scriptURL;
+  document.body.appendChild(script);
+
+  return formId
+}
+
+// This will handle the response after making the JSONP request
+function handleResponse(response) {
+  console.log('Server Response:', response);
+
+  // Get form ID dynamically (ensure formId is passed in the response if needed)
+  const formId = response.formId ; // Default to companyForm if not provided
+  // console.log(formId)
+  var formElement = document.getElementById(formId) ;
+  if (!formElement) {
+    console.error('Form element not found for form ID:', formId);
+    return;  // Exit the function if form element is not found
+  }
+
+
+
+  // If response contains document_number, proceed with submission handling
+  if (response.document_number) {
+    alert("Data submitted successfully! \nLine Item Created: " + response.document_number);
+     // Reset the form after successful submission
+  }
+  // If response contains column_values, proceed with checking user input against column values
+  else if (response.column_values) {
+    const columnValues = response.column_values;
+    const formData = checkSavedUserInput();
+    const { userInput, formId } = formData;
+
+    // Trim spaces and convert to string for comparison
+    const userInputString = String(userInput);
+    const columnValuesString = columnValues.map(value => String(value));
+
+    // Select error alert dynamically
+    const errorAlert = document.querySelector(`#${formId} .error-alert`);
+    const submitbtn = document.querySelector(`#${formId} .submit`);
+
+    // Check if the user input exists in the column values
+    const isMatch = columnValuesString.some(value => value === userInputString);
+
+    if (errorAlert) {
+      if (isMatch) {
+        // If the value exists, show the alert
+        errorAlert.style.display = "block";
+        submitbtn.setAttribute('disabled', 'true');
+        errorAlert.textContent = "The value already exists. Please enter a different value.";
+      } else {
+        // If the value doesn't exist, hide the alert and enable submit button
+        submitbtn.removeAttribute('disabled');
+        errorAlert.style.display = "none";
+      }
+    } else {
+      console.error(`Error alert element not found for form ID: ${formId}`);
+    }
+
+    // Clear form data after checking
+    checkAndClearFormData();
+    console.log("Deleting stored form data");
+  } else {
+    // If neither document_number nor column_values are in the response, log an error
+    console.error('Unexpected response structure:', response);
+  }
+}
+
+
+// Debounce function to prevent excessive calls to the server while typing
+let debounceTimeout; // To store the timeout reference
+
+function debouncedFunction(event) {
+  // Get the form ID dynamically from the form
+
+  if (event.target.type === "submit") {
+    return;  // Do nothing if the submit button is clicked
+}
+
+  if (!event.target.hasAttribute('data-debounced')) {
+    return;  // Exit if the input field doesn't have the 'data-debounced' attribute
+}
+
+  const formId_temp = event.target.closest('form').id;
+
+  // Clear the previous timeout if there is one
+
+  // Set a new timeout to call the function after 500ms of no keypress
+  debounceTimeout = setTimeout(() => {
+      const value = event.target.value;
+
+      // Save the user input and form ID into localStorage
+      saveFormData(value, formId_temp);
+
+      // Call the checking function with user input and form ID
+      serversideChecking(value, formId_temp);
+  }, 500);  // 500ms delay (can be adjusted based on your preference)
+  clearTimeout(debounceTimeout);
+
+}
+
+// Function to save user input and form name into localStorage
+function saveFormData(value, formId) {
+  if (value && formId) {
+      const formData = {
+          userInput: value.trim(),
+          formId: formId
+      };
+      
+      // Save to localStorage
+      localStorage.setItem('formData', JSON.stringify(formData));
+      console.log('Form data saved:', formData);
+  }
+}
+
+// Function to check and remove the stored form data
+function checkAndClearFormData() {
+  const storedData = localStorage.getItem('formData');
+
+  if (storedData) {
+      const formData = JSON.parse(storedData);
+      console.log('Stored form data:', formData);
+
+      // Remove data from localStorage after checking
+      localStorage.removeItem('formData');
+      console.log('Stored form data cleared.');
+  } else {
+      console.log('No form data found in localStorage.');
+  }
+}
+
+// Function to retrieve saved user input
+function checkSavedUserInput() {
+  const storedData = localStorage.getItem('formData');
+  if (storedData) {
+      const formData = JSON.parse(storedData);
+      return { userInput: formData.userInput, formId: formData.formId };
+  }
+  return {};
+}
+
+// Example of setting up event listeners for the input fields
+document.querySelectorAll('.form-control').forEach(input => {
+  input.addEventListener('input', debouncedFunction);
+});

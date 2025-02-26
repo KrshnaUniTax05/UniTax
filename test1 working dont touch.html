@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google Sheets Demo</title>
+  <script>
+    // Global variable to store the current data (used when editing)
+    let currentData = [];
+
+    // Function to send data to Google Sheets
+    function sendData() {
+      const name = document.getElementById("name").value;
+      const age = document.getElementById("age").value;
+
+      fetch("https://script.google.com/macros/s/AKfycbyR7-pNU8W8gN1Vi73Y3GOQCQ-WHoQIO1MyNM9j_8ns8rzUiEl5AnbXkPSLDpiLEoEx/exec", {
+        method: 'POST',
+        body: JSON.stringify({action: "send", name: name, age: age}),
+      }).then(response => response.text())
+        .then(data => alert(data));
+    }
+
+    // Function to fetch data from Google Sheets and display in a table
+    function fetchData() {
+      fetch("https://script.google.com/macros/s/AKfycbyR7-pNU8W8gN1Vi73Y3GOQCQ-WHoQIO1MyNM9j_8ns8rzUiEl5AnbXkPSLDpiLEoEx/exec", {
+        method: 'POST',
+        body: JSON.stringify({action: "fetch"}),
+      }).then(response => response.json())
+        .then(data => {
+          currentData = data; // Store the data for later use
+          const table = document.getElementById("dataTable");
+          table.innerHTML = "";  // Clear previous data
+
+          // Create table headers dynamically using the first row from data (headers)
+          let headerRow = table.insertRow();
+          data[0].forEach(header => {
+            let headerCell = document.createElement("th");
+            headerCell.textContent = header;
+            headerRow.appendChild(headerCell);
+          });
+
+          let actionHeader = document.createElement("th");
+          actionHeader.textContent = "Action";
+          headerRow.appendChild(actionHeader);
+
+          // Populate the table with data and an "Edit" button in each row (excluding header row)
+          data.slice(1).forEach((row, index) => {
+            let newRow = table.insertRow();
+            row.forEach((cellData, cellIndex) => {
+              let newCell = newRow.insertCell(cellIndex);
+              newCell.innerHTML = cellData;
+            });
+            let actionCell = newRow.insertCell(row.length);
+            actionCell.innerHTML = `<button onclick="editRow(${index + 1})">Edit</button>`;
+          });
+        });
+    }
+
+    // Function to enable editing of a specific row
+    function editRow(index) {
+      const table = document.getElementById("dataTable");
+      const row = table.rows[index];  // Index +1 because the first row is headers
+
+      // Turn the data cells into input fields
+      for (let i = 0; i < row.cells.length; i++) {
+        let cellValue = row.cells[i].innerHTML;
+        row.cells[i].innerHTML = `<input type="text" id="editCell${index}-${i}" value="${cellValue}">`;
+      }
+
+      // Change the Edit button to a Save button
+      row.cells[row.cells.length - 1].innerHTML = `<button onclick="saveRow(${index})">Save</button>`;
+    }
+
+    // Function to save the edited row back to Google Sheets
+    // Function to save the edited row back to Google Sheets
+function saveRow(index) {
+  const table = document.getElementById("dataTable");
+  const row = table.rows[index];  // Index corresponds to the row in the table
+
+  // Collect the edited data from input fields
+  const editedName = document.getElementById(`editCell${index}-${0}`).value;  // Name
+  const editedAge = document.getElementById(`editCell${index}-${1}`).value;   // Age
+
+  // Send the edited data to Google Sheets (index + 2 because the header is row 1)
+  fetch("https://script.google.com/macros/s/AKfycbyR7-pNU8W8gN1Vi73Y3GOQCQ-WHoQIO1MyNM9j_8ns8rzUiEl5AnbXkPSLDpiLEoEx/exec", {
+    method: 'POST',
+    body: JSON.stringify({
+      action: "edit",
+      row: index + 1,  // Adding 2 because of the header row and zero-based index
+      newName: editedName,
+      newAge: editedAge
+    }),
+    
+  }).then(response => response.text())
+    .then(data => {
+      // alert(data);
+      fetchData()
+      updateTableRow(index, editedName, editedAge);  // Update table UI with the new data
+    });
+}
+
+
+
+    // Function to update the table row after saving the data
+    function updateTableRow(index, newData) {
+      const table = document.getElementById("dataTable");
+      const row = table.rows[index];  // Index +1 to account for header row
+
+      // Update the table with new values
+      newData.forEach((value, i) => {
+        row.cells[i].innerHTML = value;
+      });
+
+      // Change the Save button back to Edit button
+      row.cells[newData.length].innerHTML = `<button onclick="editRow(${index})">Edit</button>`;
+    }
+  </script>
+</head>
+<body>
+  <h2>Send Data to Google Sheets</h2>
+  Name: <input type="text" id="name"><br>
+  Age: <input type="number" id="age"><br>
+  <button onclick="sendData()">Send Data</button>
+
+  <h2>Fetch Data from Google Sheets</h2>
+  <button onclick="fetchData()">Fetch Data</button>
+
+  <h2>Data Table</h2>
+  <table id="dataTable" border="1">
+    <!-- Data will be inserted here -->
+  </table>
+</body>
+</html>

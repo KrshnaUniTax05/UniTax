@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Human Interaction</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .chat-container { width: 500px; margin: auto; }
+        .chat-box { height: 300px; border: 1px solid #ccc; padding: 10px; overflow-y: scroll; margin-bottom: 10px; }
+        .input-box { width: 100%; padding: 10px; }
+        button { padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-box" id="chat-box"></div>
+    <input type="text" id="user-input" class="input-box" placeholder="Type your message" />
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+    // Simulate sending a message and getting a response
+    function sendMessage() {
+        const userInput = document.getElementById("user-input").value;
+        if (!userInput.trim()) return; // Don't send if empty
+
+        // Display the user's message in the chat box
+        displayMessage(userInput, 'user');
+
+        // Simulate interaction with the AI system (chatbot) using the input
+        interactWithAI(userInput);
+    }
+
+    // Display the message in the chat box
+    function displayMessage(message, sender) {
+        const chatBox = document.getElementById("chat-box");
+        const messageElement = document.createElement("div");
+        messageElement.textContent = `${sender === 'user' ? 'You: ' : 'AI: '}${message}`;
+        chatBox.appendChild(messageElement);
+        chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+    }
+
+    // Simulate interaction with an AI system (e.g., Perchance AI)
+    async function interactWithAI(input) {
+        // Here we simulate waiting for a response after sending the message
+        // Assuming we are interacting with an AI that responds after a short delay
+        setTimeout(() => {
+            // Create a mock response based on the input (replace this with actual API call or scraping)
+            const aiResponse = `AI: ${generateAIResponse(input)}`;
+            displayMessage(aiResponse, 'ai');
+        }, 2000); // Simulate a delay for AI response
+    }
+
+    // Simple AI response generator (replace with actual AI service integration)
+    function generateAIResponse(input) {
+        // This is a mock response; replace with real AI or chatbot service.
+        const mockResponses = {
+            "Hello": "Hi there! How can I assist you today?",
+            "How are you?": "I'm just a bot, but I'm doing great! Thanks for asking.",
+            "What is your name?": "I'm your friendly AI assistant.",
+            "Tell me a joke": "Why don't scientists trust atoms? Because they make up everything!"
+        };
+
+        return mockResponses[input] || "Sorry, I don't understand that. Can you ask something else?";
+    }
+</script>
+
+</body>
+</html>

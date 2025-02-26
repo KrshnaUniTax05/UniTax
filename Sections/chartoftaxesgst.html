@@ -1,0 +1,61 @@
+<!-- create a chart of GST taxes to apply tax rates on a ledger -->
+ <div class="card">
+    <div class="card-header">Chart of Taxes</div>
+    <div class="card-body">
+       <form action="" class="text-start">
+        <div class="row my-3">
+            <div class="col-sm-3 text-start">
+                <label for="tax1">Tax Type</label>
+            </div>
+            <div class="col-sm-3">
+                <select name="Tax Type" onchange="switchto()" class="col-sm-7 m-0 p-1" id="Tax_taxtype">
+                    <option value="GST">GST</option>
+                    <option value="TDS">TDS</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-3">
+            <div class="col-sm-3 text-start">
+                <label for="tax1">Tax Code</label>
+            </div>
+            <div class="col-sm-1">
+                <input type="text" class="form-control" id="tax1">
+            </div>
+        </div>
+        <div class="row my-3">
+            <div class="col-sm-3 text-start">
+                <label for="tax1">Tax Description</label>
+            </div>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="tax1">
+            </div>
+        </div>
+        <div class="row my-3">
+            <div class="col-sm-3 text-start">
+                <label for="tax1">Tax %</label>
+            </div>
+            <div class="col-sm-3">
+                <input type="number" class="form-control" id="tax1">
+            </div>
+        </div>
+        <div id="stypeoftrans"   style="display: none;">
+            <div class="row my-3">
+                <div class="col-sm-3 text-start">
+                    <label for="stypeoftransq" class="form-label">Transaction Type</label>
+                </div>
+                <div class="col-sm-3">
+                    <select name="stypeoftransq" class="form-select p-1" id="stypeoftransq">
+                        <option value="GST">GST</option>
+                        <option value="TDS">TDS</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+              
+       </form>
+    </div>
+ </div>
+ <script>
+
+ </script>

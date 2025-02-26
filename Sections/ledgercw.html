@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GL Creation Window</title>
+</head>
+<body>
+
+  <div class="container">
+    <div class="card mt-4 text-start">
+      <div class="card-header">
+        GL Creation Window
+      </div>
+      <div class="card-body glcw">
+        <div id="status"></div>
+       <!-- HTML structure for section tabs -->
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+      <a class="nav-link active" id="section1-tab" data-toggle="tab" href="#section1" role="tab" aria-controls="section1" aria-selected="true">General</a>
+  </li>
+  <li class="nav-item">
+      <a class="nav-link" id="section2-tab" data-toggle="tab" href="#section2" role="tab" aria-controls="section2" aria-selected="false">Banking</a>
+  </li>
+  <li class="nav-item">
+      <a class="nav-link" id="section3-tab" data-toggle="tab" href="#section3" role="tab" aria-controls="section3" aria-selected="false">Assignment</a>
+  </li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="section1" role="tabpanel" aria-labelledby="section1-tab">
+      <!-- Section 1 content -->
+      <fieldset>
+        <legend>General Information</legend>
+        <div class="form-group row">
+          <label for="glname" class="col-sm-2 col-form-label">GL Name</label>
+          <div class="col-sm-10">
+            <input type="text"  class="form-control" id="glname" maxlength="40">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="glgroup" class="col-sm-2 col-form-label">GL Group</label>
+          <div class="col-sm-10">
+            <input type="text" list="glgroup" class="form-control" id="glgroupInput" autocomplete="off">
+            <datalist id="glgroup">
+              <option value="Fixed Assets">Fixed Assets</option>
+              <option value="Current Assets">Current Assets</option>
+              <option value="Current Liabilities">Current Liabilities</option>
+              <option value="Secured Loans">Secured Loans</option>
+              <option value="Unsecured Loans">Unsecured Loans</option>
+              <option value="Deposits">Deposits</option>
+              <option value="Duties & Taxes">Duties & Taxes</option>
+              <option value="Direct Income">Direct Income</option>
+              <option value="Indirect Income">Indirect Income</option>
+              <option value="Direct Expenses">Direct Expenses</option>
+              <option value="Indirect Expenses">Indirect Expenses</option>
+              <option value="Capital Account">Capital Account</option>
+              <option value="Bank OD A/c">Bank OD A/c (Overdraft Account)</option>
+              <option value="Bank OCC A/c">Bank OCC A/c (Cash Credit Account)</option>
+              <option value="Bank Accounts">Bank Accounts</option>
+              <option value="Loan A/c">Loan A/c</option>
+              <option value="Purchase Account">Purchase Account</option>
+              <option value="Purchase Return">Purchase Return</option>
+              <option value="Sales Account">Sales Account</option>
+              <option value="Sales Return">Sales Return</option>
+              <option value="VAT">VAT (Value Added Tax)</option>
+              <option value="CST">CST (Central Sales Tax)</option>
+              <option value="Excise">Excise</option>
+              <option value="Service Tax">Service Tax</option>
+              <option value="TDS">TDS (Tax Deducted at Source)</option>
+              <option value="TCS">TCS (Tax Collected at Source)</option>
+            </datalist>
+        </div>
+        </div>
+      <legend>Address</legend>
+      <div class="form-group row">
+        <label for="glname" class="col-sm-4 col-form-label">Address 1</label>
+        <div class="col-sm-10">
+          <input type="text"  class="form-control" id="glname" maxlength="40">
+        </div>
+      </div>
+      </fieldset>  
+      <button type="button" class="btn btn-primary" id="nextBtn1">Next</button>
+  </div>
+  <div class="tab-pane fade" id="section2" role="tabpanel" aria-labelledby="section2-tab">
+      <!-- Section 2 content -->
+      <h3>Section 2</h3>
+      <p>This is the content of section 2.</p>
+      <button type="button" class="btn btn-secondary mr-2" id="prevBtn2">Previous</button>
+      <button type="button" class="btn btn-primary" id="nextBtn2">Next</button>
+  </div>
+  <div class="tab-pane fade" id="section3" role="tabpanel" aria-labelledby="section3-tab">
+      <!-- Section 3 content -->
+      <h3>Section 3</h3>
+      <p>This is the content of section 3.</p>
+      <button type="button" class="btn btn-secondary mr-2" id="prevBtn3">Previous</button>
+      <button type="button" class="btn btn-primary" id="submitBtn">Submit</button>
+  </div>
+</div>
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="addRowsModal" tabindex="-1" role="dialog" aria-labelledby="addRowsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addRowsModalLabel">Add Rows</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <label for="numberOfRows">Enter the number of new rows:</label>
+          <input type="number" class="form-control" id="numberOfRows" min="1" value="1">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="confirmAddRows">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // JavaScript to control navigation between sections
+    $(document).ready(function(){
+        $("#nextBtn1").click(function(){
+            $("#section1-tab").removeClass("active");
+            $("#section1").removeClass("show active");
+            $("#section2-tab").addClass("active");
+            $("#section2").addClass("show active");
+        });
+  
+        $("#prevBtn2").click(function(){
+            $("#section2-tab").removeClass("active");
+            $("#section2").removeClass("show active");
+            $("#section1-tab").addClass("active");
+            $("#section1").addClass("show active");
+        });
+  
+        $("#nextBtn2").click(function(){
+            $("#section2-tab").removeClass("active");
+            $("#section2").removeClass("show active");
+            $("#section3-tab").addClass("active");
+            $("#section3").addClass("show active");
+        });
+  
+        $("#prevBtn3").click(function(){
+            $("#section3-tab").removeClass("active");
+            $("#section3").removeClass("show active");
+            $("#section2-tab").addClass("active");
+            $("#section2").addClass("show active");
+        });
+  
+        // You can add more buttons and functions as needed for additional steps
+    });
+  </script>
+</body>
+</html>

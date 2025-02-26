@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Table with Layout Button</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .loader {
+            display: none;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>Dynamic Table</h2>
+
+    <!-- User Input Form -->
+    <div class="form-group mb-3">
+        <label for="action">Action:</label>
+        <input type="text" id="action" class="form-control" value="getRowData" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="sheet_name">Sheet Name:</label>
+        <input type="text" id="sheet_name" class="form-control" value="Sheet1" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="column_to_search">Column to Search:</label>
+        <input type="text" id="column_to_search" class="form-control" value="Document" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="document_number">Document Number:</label>
+        <input type="text" id="document_number" class="form-control" value="*" />
+    </div>
+    <button id="fetchData" class="btn btn-primary mt-3">Fetch Data</button>
+    
+    <button id="selectLayout" class="btn btn-secondary mt-3">Select Layout</button>
+
+    <!-- Error message container -->
+    <div id="errorMessage" class="alert alert-danger mt-3" style="display: none;"></div>
+
+    <!-- Layout Modal for selecting columns -->
+    <div id="layoutModal" class="modal" tabindex="-1" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Select Columns to Display</h5>
+                    <button type="button" class="btn-close" id="closeLayoutModal"></button>
+                </div>
+                <div class="modal-body" id="layoutCheckboxes"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="applyLayout">Apply Layout</button>
+                    <button type="button" class="btn btn-secondary" id="closeLayoutModal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loader -->
+    <div id="loader" class="loader"></div>
+
+    <!-- Table Container -->
+    <div id="tableContainer" class="mt-5"></div>
+</div>
+
+<script>
+    let tableData = []; // To store the raw data
+    let selectedColumns = []; // To store selected columns for visibility
+
+    document.getElementById('fetchData').addEventListener('click', function() {
+    const action = document.getElementById('action').value;
+    const sheetName = document.getElementById('sheet_name').value;
+    const columnToSearch = document.getElementById('column_to_search').value;
+    const documentNumber = document.getElementById('document_number').value;
+
+    // Handle '*' as the document number to fetch all documents
+    const documentParam = documentNumber === "*" ? "*" : encodeURIComponent(documentNumber);
+
+    const url = `https://script.google.com/macros/s/AKfycby-yBoXzgchQG_TCZYTpJ4MjQnWDNz3cMtSj9fAU0bxk3gjpXtFllm3jo3fppvhk4ny/exec?action=${action}&sheet_name=${sheetName}&column_to_search=${columnToSearch}&document_number=${documentParam}&callback=handleResponse`;
+
+    // Show the loader
+    document.getElementById('loader').style.display = 'block';
+    // Dynamically load JSONP response
+    const script = document.createElement('script');
+    script.src = url;
+    document.body.appendChild(script);
+    console.log(sc)
+});
+
+function handleResponse(response) {
+    // Hide the loader when the response is received
+    document.getElementById('loader').style.display = 'none';
+
+    // Clear existing table data before showing the new data
+    document.getElementById('tableContainer').innerHTML = '';
+
+    // Check if the response is successful
+    if (response.status === "success") {
+        // Store the data from the response (use matching_rows here)
+        const tableData = response.matching_rows;
+
+        // If no rows are returned, show an error message
+        if (!tableData || tableData.length ==   = 0) {
+            showError("No data found.");
+            alert("No data found.");
+            return;
+        }
+
+        // Create the table dynamically from the data
+        const table = createTable(tableData);
+
+        // Insert the generated table into the DOM
+        document.getElementById('tableContainer').innerHTML = table;
+
+        // Generate layout options based on the first row's keys (columns)
+        generateLayoutOptions(tableData[0]);
+
+        // Hide any error messages if data was fetched successfully
+        document.getElementById('errorMessage').style.display = 'none';
+    } else {
+        // If there is an error in the response, show the error message
+        showError("Error fetching data: " + response.message);
+    }
+}
+
+// Helper function to show error messages
+function showError(message) {
+    const errorMessageDiv = document.getElementById('errorMessage');
+    errorMessageDiv.textContent = message;
+    errorMessageDiv.style.display = 'block';
+}
+
+
+
+    // Generate layout options (checkboxes for each column)
+    function generateLayoutOptions(rowData) {
+        const layoutModal = document.getElementById('layoutModal');
+        const layoutCheckboxes = document.getElementById('layoutCheckboxes');
+        
+        layoutCheckboxes.innerHTML = ''; // Clear previous options
+        
+        // Add checkboxes for each column
+        Object.keys(rowData).forEach(column => {
+            const checkbox = document.createElement('div');
+            checkbox.classList.add('form-check');
+            checkbox.innerHTML = `
+                <input type="checkbox" class="form-check-input" id="checkbox-${column}" checked>
+                <label class="form-check-label" for="checkbox-${column}">${column}</label>
+            `;
+            layoutCheckboxes.appendChild(checkbox);
+        });
+
+        // Do not display the layout modal initially
+        layoutModal.style.display = 'none';
+    }
+
+    // Open layout modal when "Select Layout" button is clicked
+    document.getElementById('selectLayout').addEventListener('click', function() {
+        const layoutModal = document.getElementById('layoutModal');
+        layoutModal.style.display = 'block';
+    });
+
+    // Apply selected layout (columns to show/hide)
+    document.getElementById('applyLayout').addEventListener('click', function() {
+        selectedColumns = [];
+        const checkboxes = document.querySelectorAll('.form-check-input');
+
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                selectedColumns.push(checkbox.id.replace('checkbox-', ''));
+            }
+        });
+
+        const table = createTable(tableData);
+        document.getElementById('tableContainer').innerHTML = table;
+        document.getElementById('layoutModal').style.display = 'none';
+    });
+
+    // Close the layout modal
+    document.getElementById('closeLayoutModal').addEventListener('click', function() {
+        document.getElementById('layoutModal').style.display = 'none';
+    });
+
+    // Create the table dynamically with selected columns
+    function createTable(rows) {
+        let table = '<table class="table table-bordered table-hover fade-in"><thead><tr>';
+
+        // Create table headers dynamically for selected columns
+        if (rows.length > 0) {
+            Object.keys(rows[0]).forEach(key => {
+                if (selectedColumns.length === 0 || selectedColumns.includes(key)) {
+                    table += `<th>${key}<br><input type="text" class="form-control" oninput="filterTable(event, '${key}')" placeholder="Search ${key}"></th>`;
+                }
+            });
+            table += '</tr></thead><tbody>';
+
+            // Create table rows dynamically for selected columns
+            rows.forEach(row => {
+                table += '<tr>';
+                Object.keys(row).forEach(key => {
+                    if (selectedColumns.length === 0 || selectedColumns.includes(key)) {
+                        table += `<td>${row[key]}</td>`;
+                    }
+                });
+                table += '</tr>';
+            });
+
+            table += '</tbody></table>';
+        } else {
+            table = '<p>No data available</p>';
+        }
+
+        return table;
+    }
+
+    // Filter table rows by column input
+    function filterTable(event, column) {
+        const searchTerm = event.target.value.toLowerCase();
+        const tableRows = document.querySelectorAll('tbody tr');
+        tableRows.forEach(row => {
+            const cell = row.querySelector(`td:nth-child(${Array.from(row.parentElement.rows[0].cells).findIndex(cell => cell.textContent === column) + 1})`);
+            if (cell && cell.textContent.toLowerCase().includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

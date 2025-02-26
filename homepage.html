@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniTax - Accounting Software</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .floating-img {
+            animation: float 6s infinite;
+        }
+        .marquee-track {
+            animation: marquee 20s linear infinite;
+        }
+        .fade-in {
+            opacity: 0;
+            transition: opacity 0.6s, transform 0.6s;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0) !important;
+        }
+        .testimonial-card {
+            transition: transform 0.3s;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-10px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fs-3 fw-bold text-primary" href="#">UniTax</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#testimonials">Testimonials</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#pricing">Pricing</a></li>
+                </ul>
+                <button class="btn btn-primary ms-3">Get Started</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-5 mt-5">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4 fade-in" style="transform: translateY(20px)">
+                        Accounting Made <span class="text-primary">Simple</span>
+                    </h1>
+                    <p class="lead mb-4 fade-in" style="transform: translateY(20px)">
+                        Trusted by <span id="userCount">38,421</span>+ businesses worldwide
+                    </p>
+                    <button class="btn btn-primary btn-lg fade-in" style="transform: translateY(20px)">
+                        Start Free Trial
+                    </button>
+                </div>
+                <div class="col-lg-6">
+                    <img src="https://cdn.pixabay.com/photo/2018/05/08/08/44/artificial-intelligence-3382507_1280.jpg" 
+                         class="img-fluid floating-img rounded-3" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Logo Marquee -->
+    <div class="bg-light py-5 overflow-hidden">
+        <div class="marquee-track" style="white-space: nowrap; display: inline-block;">
+            <img src="https://www.vectorlogo.zone/logos/slack/slack-ar21.svg" class="mx-5" style="height: 40px;" alt="">
+            <img src="https://www.vectorlogo.zone/logos/airbnb/airbnb-ar21.svg" class="mx-5" style="height: 40px;" alt="">
+            <img src="https://www.vectorlogo.zone/logos/netflix/netflix-ar21.svg" class="mx-5" style="height: 40px;" alt="">
+            <img src="https://www.vectorlogo.zone/logos/spotify/spotify-ar21.svg" class="mx-5" style="height: 40px;" alt="">
+        </div>
+    </div>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">What Our Users Say</h2>
+            <div class="row" id="testimonialContainer">
+                <!-- JS will populate testimonials here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Simple Pricing</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow">
+                        <div class="card-body text-center">
+                            <h3 class="card-title">Free Forever</h3>
+                            <div class="display-4 mb-3">$0</div>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">✓ Unlimited Invoices</li>
+                                <li class="mb-2">✓ Expense Tracking</li>
+                                <li class="mb-2">✓ Basic Reports</li>
+                            </ul>
+                            <button class="btn btn-primary w-100">Get Started</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container text-center">
+            <p class="mb-0">© 2024 UniTax. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Testimonials Data
+        const testimonials = [
+            {
+                text: "UniTax simplified our accounting in ways I didn't think possible. The perfect balance of power and simplicity.",
+                name: "Sarah Johnson",
+                role: "CFO, TechStart Inc.",
+                img: "https://randomuser.me/api/portraits/women/44.jpg"
+            },
+            {
+                text: "As a small business owner, UniTax saved me 20 hours/month. The free plan has everything I need!",
+                name: "Michael Chen",
+                role: "Owner, Cafe Brew",
+                img: "https://randomuser.me/api/portraits/men/32.jpg"
+            }
+        ];
+
+        // Populate testimonials
+        const container = document.getElementById('testimonialContainer');
+        testimonials.forEach(testimonial => {
+            container.innerHTML += `
+                <div class="col-md-6 mb-4">
+                    <div class="card testimonial-card h-100 shadow">
+                        <div class="card-body">
+                            <p class="card-text mb-3">"${testimonial.text}"</p>
+                            <div class="d-flex align-items-center">
+                                <img src="${testimonial.img}" class="rounded-circle me-3" style="width: 50px; height: 50px;" alt="">
+                                <div>
+                                    <h5 class="mb-0">${testimonial.name}</h5>
+                                    <small class="text-muted">${testimonial.role}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        // User counter
+        let count = 38421;
+        setInterval(() => {
+            count += Math.floor(Math.random() * 3);
+            document.getElementById('userCount').textContent = count.toLocaleString();
+        }, 3000);
+
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

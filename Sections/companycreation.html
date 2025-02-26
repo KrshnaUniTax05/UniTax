@@ -1,0 +1,64 @@
+<div class="card">
+  <div class="card-header text-start">
+    Create New Company
+  </div>
+  <div class="card-body text-start">
+    <form id="companyForm" class="tosend" onload="tellme()" name="Companies" method="post" autocomplete="off">
+      <div class="alert alert-danger error-alert" style="display: none;"></div>
+      <!-- Company Name -->
+      <div class="mb-3">
+        <label for="companyName" class="form-label">Company Name</label>
+        <input type="text" class="form-control" name="companyName" id="companyName">
+      </div>
+      
+      <!-- Company Address -->
+      <div class="mb-3">
+        <label for="companycode" class="form-label">Company Code</label>
+        <input type="number" class="form-control" min="1000" max="9999"  name="CompanyCode" id="companycode" data-columnname_singlesearch="CompanyCode"  oninput="debouncedFunction(event)" data-debounced="true">
+      </div>
+    
+      
+      <!-- Company Address -->
+      <div class="mb-3">
+        <label for="companyAddress" class="form-label">Company Address</label>
+        <input type="text" class="form-control" name="companyAddress" id="companyAddress">
+      </div>
+      
+      <!-- Phone Number -->
+      <div class="mb-3">
+        <label for="companyPhone" class="form-label">Phone Number</label>
+        <input type="tel" class="form-control" name="companyPhone" id="companyPhone">
+      </div>
+      
+      <!-- Email -->
+      
+  <!-- <div class="mb-3">
+    <label for="companyInput" class="form-label">Company Name (Datalist)</label>
+    <input type="text" 
+           list="companyList" 
+           data-fetch_column 
+           data-sheet_name="companyForm" 
+           data-column_name="DocumentNumber" 
+           placeholder="Enter company name" 
+           id="companyInput">
+
+    <datalist id="companyList">
+    </datalist>
+  </div>
+
+  <div class="mb-3">
+    <label for="companySelect" class="form-label">Company Name (Select Dropdown)</label>
+    <select id="companySelect" 
+            data-fetch_column 
+            data-sheet_name="companyForm" 
+            data-column_name="companyName">
+      <option value="">Select a company</option>
+    </select>
+  </div> -->
+
+
+      <!-- Submit Button -->
+      <button type="submit"  class="btn btn-primary w-100 submit">Create Company</button>
+    </form>
+  </div>
+</div>

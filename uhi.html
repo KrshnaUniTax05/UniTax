@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Receipt Voucher</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+  <div class="container mt-4">
+    <div class="card text-start">
+      <div class="card-header">
+        Sale Voucher
+      </div>
+      <div class="card-body">
+        <div id="status" class="mb-3"></div>
+        <form id="receiptForm" class="tosend" method="POST" autocomplete="on">
+          <div class="form-group row">
+            <label for="glAccount" class="col-sm-2 col-form-label">G/L Account:</label>
+            <div class="col-sm-4">
+              <input list="glAccounts" class="form-control" id="glAccount" name="glAccount">
+              <datalist id="glAccounts">
+              </datalist>
+            </div>
+            <label for="Date" class="col-sm-2 col-form-label">Date</label>
+            <div class="col-sm-4">
+              <input type="date" class="form-control" id="Date" name="Date">
+            </div>
+          </div>
+          <input type="hidden" id="permanentText" name="documenttype" value="Sale">
+          <div class="form-group row">
+            <label for="Tax Code" class="col-sm-2 col-form-label">Tax Code:</label>
+            <div class="col-sm-4">
+              <input type="text" class="form-control" id="Tax Code" name="Tax Code">
+            </div>
+            <label for="instrumentDate" class="col-sm-2 col-form-label">Instrument Date:</label>
+            <div class="col-sm-4">
+              <input type="date" class="form-control" id="instrumentDate" name="instrumentDate">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="project" class="col-sm-2 col-form-label">Project:</label>
+            <div class="col-sm-4">
+              <input type="text" class="form-control" id="project" name="project">
+            </div>
+            <label for="companycode" class="col-sm-2 col-form-label">Company Code:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="companycode" name="companycode">
+            </div>
+          </div>
+          <!-- Table for credit entries -->
+          <div class="table-responsive table-sm">
+            <table class="table mt-4" id="creditEntryTable">
+              <thead>
+                <tr>
+                  <th>Item Name</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
+                  <th>Total</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="creditEntryTableBody">
+                <tr class="credit-entry-row">
+                  <td><input type="text" class="form-control" name="offsettingAccount[]"></td>
+                  <td><input type="number" class="form-control amount" name="amount[]" step="0.01"></td>
+                  <td><input type="text" class="form-control" name="narration[]"></td>
+                  <td><button type="button" class="btn btn-danger delete-row-button">Delete</button></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td>Total:</td>
+                  <td id="totalAmount" colspan="3">0.00</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <!-- Buttons -->
+          <button type="button" class="btn btn-primary" id="addRowButton">Add Row</button>
+          <button type="submit" class="btn btn-success" id="submitButton">
+            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    // Function to add a new row to the credit entry table
+    document.getElementById('addRowButton').addEventListener('click', () => {
+      const tableBody = document.getElementById('creditEntryTableBody');
+      const newRow = `
+        <tr class="credit-entry-row">
+          <td><input type="text" class="form-control" name="offsettingAccount[]" required></td>
+          <td><input type="number" class="form-control amount" name="amount[]" required step="0.01"></td>
+          <td><input type="text" class="form-control" name="narration[]" required></td>
+          <td><button type="button" class="btn btn-danger delete-row-button">Delete</button></td>
+        </tr>`;
+      tableBody.insertAdjacentHTML('beforeend', newRow);
+    });
+
+    // Function to delete a row from the credit entry table
+        document.getElementById('creditEntryTableBody').addEventListener('click', (event) => {
+      // Check if the clicked element is a delete button
+      if (event.target.classList.contains('delete-row-button')) {
+        const rows = document.querySelectorAll('#creditEntryTableBody tr');
+        
+        // Allow deletion only if there are more than 1 row
+        if (rows.length > 1) {
+          event.target.closest('tr').remove();
+          calculateTotal();
+        } else {
+          // Optionally, show an alert or message indicating deletion is not allowed
+          alert('Cannot delete the last row');
+        }
+      }
+    });
+
+
+    // Function to calculate the total amount
+    const calculateTotal = () => {
+      const amounts = document.querySelectorAll('.amount');
+      let total = 0;
+      amounts.forEach(input => {
+        total += parseFloat(input.value) || 0;
+      });
+      document.getElementById('totalAmount').textContent = total.toFixed(2);
+    };
+
+    // Recalculate total when amount fields change
+    document.getElementById('creditEntryTableBody').addEventListener('input', (event) => {
+      if (event.target.classList.contains('amount')) {
+        calculateTotal();
+      }
+    });
+
+    // Event listener for form submission
+   // Event listener for form submission
+document.querySelectorAll('.tosend').forEach(form => {
+  form.addEventListener('submit', async function (event) {
+    event.preventDefault(); // Prevent default form submission
+    console.log('Form submission started');
+
+    // Add the 'recently_submitted' class to mark the form as recently submitted
+    form.classList.add('recently_submitted');
+
+    // Generate a unique submission ID (e.g., timestamp or UUID)
+    const submissionId = `SUB-${Date.now()}`;
+
+    // Get the form name and ID
+    const formName = form.getAttribute('name');
+    const formId = event.target.id;
+
+    // Determine the sheet name
+    const userid = "user123"; // Replace with actual logic
+    const sheetName = `${userid}_${formId}`;
+
+    // Get constant fields data from the form
+    const constantFields = {
+      submission_id: submissionId // Add unique submission ID
+    };
+    form.querySelectorAll('.constant-field').forEach(input => {
+      constantFields[input.name] = input.value;
+    });
+
+    // Prepare the data to be stored in local storage before submission
+    const tableRows = form.querySelectorAll('table tbody tr');
+    const formDataToStore = [];
+
+    for (const row of tableRows) {
+      // Collect row-specific data
+      const rowData = {};
+      let isRowEmpty = true; // Flag to check if row is empty
+
+      row.querySelectorAll('input, select, textarea').forEach(input => {
+        rowData[input.name] = input.value;
+        
+        // If any field in the row has value, set isRowEmpty to false
+        if (input.value.trim() !== "") {
+          isRowEmpty = false;
+        }
+      });
+      
+      // If the row is not empty, add it to formDataToStore
+      if (!isRowEmpty) {
+        formDataToStore.push({ ...constantFields, ...rowData, sheet_name: sheetName });
+      }
+    }
+
+    // Save form data into localStorage (temporarily)
+    localStorage.setItem('formData', JSON.stringify(formDataToStore));
+
+    // Create and send the request for each row's data
+    try {
+      for (const data of formDataToStore) {
+        const queryString = new URLSearchParams(data).toString();
+        const scriptURL = `https://script.google.com/macros/s/AKfycbyD7FBqOE27EjMdgMKbT3cV2dWPa2LImG-9volI-axvXPdWx8rTpvpwuAy4m0cbWe4G/exec?callback=handleResponse&${queryString}`;
+        await sendRequest(scriptURL);
+      }
+      
+      // Remove form data from localStorage after successful submission
+      localStorage.removeItem('formData');
+      console.log('Form submission completed');
+      
+      // Reset the form after submission
+      form.reset();
+      
+      // Reset the number of rows in the table to 1
+      resetTableRows(form);
+
+    } catch (error) {
+      console.error('Error during submission:', error);
+      alert('Submission failed. Please try again.');
+    }
+  });
+});
+
+// Function to send JSONP request and wait for completion
+function sendRequest(url) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = url;
+
+    // Define the callback function
+    window.handleResponse = function (response) {
+      console.log('Server Response:', response);
+      resolve(response);
+    };
+
+    // Handle script load error
+    script.onerror = function () {
+      reject(new Error(`Failed to load script: ${url}`));
+    };
+
+    document.body.appendChild(script);
+  });
+}
+
+// Checking if there is form data saved in localStorage (for offline recovery)
+window.addEventListener('load', () => {
+  const savedData = localStorage.getItem('formData');
+  if (savedData) {
+    const formData = JSON.parse(savedData);
+    console.log('Found saved data:', formData);
+    // Optionally, populate the form with saved data (this step depends on your form structure)
+    // You can loop through the saved data and populate the form inputs here
+  }
+});
+
+// Function to reset the table rows back to 1
+function resetTableRows(form) {
+  const tableBody = form.querySelector('#creditEntryTableBody');
+  const rows = tableBody.querySelectorAll('.credit-entry-row');
+  
+  // Delete all rows except the first one
+  rows.forEach((row, index) => {
+    if (index > 0) {
+      row.remove();
+    }
+  });
+  
+  // Reset total amount to 0
+  document.getElementById('totalAmount').textContent = '0.00';
+}
+
+  </script>
+</body>
+</html>

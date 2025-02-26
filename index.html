@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniTax</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <!-- <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script> -->
+    <!-- <link id="pagestyle" href="./assets/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" /> -->
+     <link rel="icon" href="\assets\icons\20220609_183256.png">
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Bootstrap CSS -->
+<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+
+<!-- Bootstrap Bundle (includes Popper.js and JS plugins) -->
+
+
+</head>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script> -->
+
+<body>
+  
+      
+    <!-- loader -->
+    <div id="loader-container-main-window" class="loader-container">
+      <div id="spinner-{{timestamp}}" class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+          <span class="visually-hidden">Loading...</span>
+      </div>
+  </div>
+
+    
+    
+    <nav class="navbar sticky-top navbar-expand-lg " id="mainnavbar">
+        <div class="container-fluid justify-content-between">
+            <!-- Hamburger Icon -->
+            <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+              <i class="fa-solid fa-bars"></i>
+            </a>
+
+            <!-- Search Bar -->
+            
+            <!-- Right-aligned Links -->
+            <form class="d-flex ml-3">
+                <input class="form-control" id="searchBox" type="search" placeholder="Search here..." aria-label="Search" autocomplete="off">
+            </form>
+            <ul class="navbar-nav ml-auto">
+               
+                <li class="nav-item mx-1">
+                    <a href="#" id="showNotificationButton" class="nav-link"><i class="icon fa fa-bell"></i></a>
+                </li>
+                <li class="nav-item mx-1">
+                    <a href="#" id="showNotificationButton" class="nav-link"><i class="icon fa fa-envelope"></i></a>
+                </li>
+                <li class="nav-item ml-3">
+                  <button id="logoutButton" class="btn btn-outline-primary">Logout</button>
+                </li>                              
+            </ul>
+        </div>
+        
+    </nav>
+    
+      <!-- left navbar -->
+      <div class="container-fluid divs text-center homeview">
+        <div class="row view1">
+          <div class="col-sm-3 full-view" >
+            <div class="card my-3">
+              <div class="card-body text-start">
+                <div class="row">
+                  <div class="col-md-7 align-self-center">
+                    <strong class="lead">Good Day <br>
+                      <span class="text-primary font-weight-bolder username" id="username"></span>
+                    </strong>
+                    <h1 id="time"></h1>
+                    <h5 id="date"></h5>
+                  </div>
+                  
+                  <div class="col-md-5  align-middle time-img">
+                    <img src="https://img.freepik.com/free-vector/contemporary-workspace-flat-composition-with-man-sitting-futuristic-table-with-designer-chair-home-plant-illustration_1284-64045.jpg?w=740&t=st=1707650448~exp=1707651048~hmac=50baa1d708a1ade7c1734d7860656229a2d4c71d8a7e36ab5e8712f9482cc981" alt="">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <sections id="tasks">
+              <div class="card my-3 text-start">
+                <h5 class="card-header">Notes and Tasks</h5>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <form class="d-flex">
+                        <input class="form-control  " type="search" placeholder="Search" aria-label="Search">
+                        <!-- <button class="btn btn-outline-success" type="submit">Search</button> -->
+                      </form>
+                    </div>
+                    <div class="container">
+                      <div class="row justify-content-center">
+                          <div class="col" style="overflow: auto; scroll-behavior: smooth;">
+                            <table  class="table table-striped table-borderless table-sm caption-top ">
+                              <caption>Tasks</caption>
+                              <thead>
+                                <tr>
+                                  <th scope="col" >#</th>
+                                  <th scope="col">Task</th>
+                                  <th scope="col">Timestamp</th>
+                                  <th scope="col">Reminder</th>
+                                </tr>
+                              </thead>
+                              <tbody id="taskTableBody">
+                                <!-- Tasks will be inserted here -->
+                              </tbody>
+                            </table>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  </div>
+                </div>
+              </div>
+            </sections>
+            <sections id="logger">
+              <div class="card my-3 text-start">
+                <h5 class="card-header">Logger</h5>
+                <div class="card-body">
+                 <div class="logging"></div>
+                </div>
+              </div>
+            </sections>
+          </div>
+          <div class="col-sm-9 full-view right-side-window pt-3 " >
+            <div id="home" class="section">
+              <div class="dynamic-content" data-href="/Sections\adminhome.html">Customer Creation</div>
+              </div>
+            <div id="ccw" class="section">
+              <div class="dynamic-content" data-href="Sections\Creditorcreationwindow.html">Creditor Creation Window</div>
+            </div>
+            <div id="ob22" class="section">
+              <div class="dynamic-content" data-href="Sections\companycreationwindow.html">Company Creation Window</div>
+            </div>
+            <div id="dcw" class="section">
+              <div class="dynamic-content" data-href="Sections\debtorcreationwindow.html">Debtor Creation Window</div>
+            </div>
+            <div id="we" class="section">
+              <div class="dynamic-content" data-href="\Sections\receiptvoucher.html" data-script="\scripts\receiptvoucher.js">Receipt Voucher</div>
+            </div>
+            <div id="go" class="section">
+              <div class="dynamic-content" data-href="\Sections\paymentvoucher.html" data-script="\scripts\payment.js">Receipt Voucher</div>
+            </div>
+            <div id="lcw" class="section">
+              <div class="dynamic-content" data-href="\Sections\ledgercw.html" >Receipt Voucher</div>
+            </div>
+            <div id="fbl3n" class="section">
+              <div class="dynamic-content" data-href="\Sections\glview.html" data-script="\scripts\glview.js">Receipt Voucher</div>
+            </div>
+            
+            <div id="mw" class="section">
+              <div class="dynamic-content" data-href="\Sections\adminhome.html">Admin home</div>
+            </div>
+            <div id="dashboard" class="section">
+              <div class="dynamic-content" data-href="\Sections\dashboard.html">dashboard</div>
+            </div>
+            <div id="gopa" class="section">
+              <div class="dynamic-content" data-href="\Sections\companycreation.html">Company Creation</div>
+            </div>
+            <div id="led" class="section">
+              <div class="dynamic-content" data-href="\Sections\ledgercreationwindow.html" data-script="\scripts\ccw.js">ledger Creation</div>
+            </div>
+            <div id="cot" class="section">
+              <div class="dynamic-content" data-href="\Sections\chartoftaxesgst.html" data-script="\scripts\ccw.js">ledger Creation</div>
+            </div>
+            <div id="ogls" class="section">
+              <div class="dynamic-content" data-href="\Sections\projectcreation.html" data-script="\scripts\ccw.js">Project Creation</div>
+            </div>
+            <div id="database" class="section">
+              <div class="dynamic-content" data-href="\Sections\database.html" data-script="\scripts\ccw.js">Temporary Database</div>
+            </div>
+            <div id="dsw" class="section">
+              <div class="dynamic-content" data-href="\Sections\datashowwizard.html" data-script="\scripts\datashowwizard.js">Data Show Window</div>
+            </div>
+            <div id="datatoshow" class="section">
+              <div class="dynamic-content" data-href="\Sections\GLCreation.html" data-script="\scripts\GLCreation.js">Data Show Window</div>
+            </div>
+            
+            <div id="ccw1" class="section">
+              <div class="dynamic-content" data-href="\Sections\customercreatewin.html" data-script="\scripts\ccw.js">Receipt Voucher</div>
+            </div>
+      
+
+
+
+
+        </div>
+        <div>
+            <div id="div9" class="section">
+              <div class="card text-start mb-5 mt-4 mx-4">
+                <h5 class="card-header ">Vendor Creation Window</h5>
+                <div class="card-body" >
+                  <!-- <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Home</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Contact</button>
+                    </li>
+                  </ul> -->
+                  <!-- <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
+                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                  </div> -->
+                  <form class="row g-3 mx-4 " id="ccw">
+                    <!-- Customer Information -->
+                   <fieldset>
+                     <legend>Customer Information</legend>
+                     <div class="form-row">
+                       <div class="form-group col-md-4">
+                         <label for="customerfName">First Name</label>
+                         <input type="text" class="form-control" id="customerfName" placeholder="Enter customer name">
+                       </div>
+                       <div class="form-group col-md-4">
+                         <label for="customermName">Middle Name</label>
+                         <input type="text" class="form-control" id="customermName" placeholder="Enter customer name">
+                       </div>
+                       <div class="form-group col-md-4">
+                         <label for="customerlName">Last Name</label>
+                         <input type="text" class="form-control" id="customerlName" placeholder="Enter customer name">
+                       </div>
+                     </div>
+                     <div class="form-row">
+                       <div class="form-group col-md-6">
+                         <label for="address">Address</label>
+                         <input type="text" class="form-control" id="address" placeholder="Enter address">
+                       </div>
+                       <div class="form-group col-md-3">
+                         <label for="state">State</label>
+                           <select class="form-control" id="state">
+                             <option value="Andhra Pradesh">Andhra Pradesh</option>
+                             <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                             <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                             <option value="Assam">Assam</option>
+                             <option value="Bihar">Bihar</option>
+                             <option value="Chandigarh">Chandigarh</option>
+                             <option value="Chhattisgarh">Chhattisgarh</option>
+                             <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
+                             <option value="Daman and Diu">Daman and Diu</option>
+                             <option value="Delhi">Delhi</option>
+                             <option value="Lakshadweep">Lakshadweep</option>
+                             <option value="Puducherry">Puducherry</option>
+                             <option value="Goa">Goa</option>
+                             <option value="Gujarat">Gujarat</option>
+                             <option value="Haryana">Haryana</option>
+                             <option value="Himachal Pradesh">Himachal Pradesh</option>
+                             <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                             <option value="Jharkhand">Jharkhand</option>
+                             <option value="Karnataka">Karnataka</option>
+                             <option value="Kerala">Kerala</option>
+                             <option value="Madhya Pradesh">Madhya Pradesh</option>
+                             <option value="Maharashtra">Maharashtra</option>
+                             <option value="Manipur">Manipur</option>
+                             <option value="Meghalaya">Meghalaya</option>
+                             <option value="Mizoram">Mizoram</option>
+                             <option value="Nagaland">Nagaland</option>
+                             <option value="Odisha">Odisha</option>
+                             <option value="Punjab">Punjab</option>
+                             <option value="Rajasthan">Rajasthan</option>
+                             <option value="Sikkim">Sikkim</option>
+                             <option value="Tamil Nadu">Tamil Nadu</option>
+                             <option value="Telangana">Telangana</option>
+                             <option value="Tripura">Tripura</option>
+                             <option value="Uttar Pradesh">Uttar Pradesh</option>
+                             <option value="Uttarakhand">Uttarakhand</option>
+                             <option value="West Bengal">West Bengal</option>
+                             <!-- Add more states as needed -->
+                           </select>
+                       </div>
+                       <div class="form-group col-md-3">
+                         <label for="pcode">Pin Code</label>
+                         <input type="text" class="form-control" id="pcode" placeholder="Enter Pin Code">
+                       </div>
+                     </div>
+                     <div class="form-row">
+                       <div class="form-group col-md-6">
+                         <label for="phoneNumber">Phone Number</label>
+                         <input type="tel" class="form-control" id="phoneNumber" placeholder="Enter phone number">
+                       </div>
+                       <div class="form-group col-md-6">
+                         <label for="email">Email</label>
+                         <input type="email" class="form-control" id="email" placeholder="Enter email">
+                       </div>
+                     </div>
+                   </fieldset>
+
+                   <!-- Account Information -->
+                   <fieldset>
+                     <div class="form-row">
+                       <legend>Account Information</legend>
+                     <div class="form-group col-md-6">
+                       <label for="accountNumber">Account Number</label>
+                       <input type="text" class="form-control" id="accountNumber" placeholder="Enter account number">
+                     </div>
+                     <div class="form-group col-md-6">
+                       <label for="bankname">Bank Name</label>
+                       <input type="text" class="form-control" id="bankname" placeholder="Enter Bank Name">
+                     </div>
+                     <div class="form-group col-md-6">
+                       <label for="transactionHistory">IFSC Code</label>
+                       <input type="text" class="form-control" id="bankifsc" placeholder="Enter IFSC Code">
+                     </div>
+                     <div class="form-group col-md-6">
+                       <label for="transactionHistory">MICR Code</label>
+                       <input type="text" class="form-control" id="bankmicr" placeholder="Enter MICR Code">
+                     </div>
+                     </div>
+                   </fieldset>
+                   <fieldset>
+                     <div class="form-row">
+                       <legend>Tax Information</legend>
+                    
+                     <div class="form-group col-md-6">
+                      <label for="taxpayertype" class="form-label">Taxpayer Type</label>
+                        <select class="form-select" id="taxpayertype" aria-label="Default select example">
+                            <option value="Unregistered">Unregistered</option>
+                            <option value="Registered">Registered</option>
+                        </select>
+                     </div>
+                     </div>
+                     <div class="row" id="taxinfo">
+                      <div class="form-group col-md-6">
+                          <label for="GST">GST Number</label>
+                          <input type="text" class="form-control text-uppercase" id="gst" placeholder="Enter GST Number" capitalize>
+                      </div>
+                      <div class="form-group col-md-6">
+                          <label for="pan">PAN Number</label>
+                          <input type="text" class="form-control text-uppercase" disabled id="pan" placeholder="Enter Pan Number">
+                      </div>
+                      <div class="form-group col-md-6">
+                          <label for="transactionHistory">TAN Number</label>
+                          <input type="text" class="form-control" id="tan" placeholder="Enter TAN Number">
+                      </div>
+                      <!-- <div class="form-group col-md-6">
+                          <label for="transactionHistory">MICR Code</label>
+                          <input type="text" class="form-control" id="bankmicr" placeholder="Enter MICR Code">
+                      </div> -->
+                  </div>
+                  
+                   </fieldset>
+
+                   <!-- Add more fieldsets as needed -->
+
+                   <button type="submit" class="btn btn-primary ">Submit</button>
+               </form>
+                </div>
+              </div>
+            </div>
+            <div id="div10" class="section">
+              <script src="customercreation.js"></script>
+              <div class="card text-start mb-5 mt-4 mx-4">
+                <h5 class="card-header ">Customer Creation Window</h5>
+                <div class="card-body">
+                  <form class="row g-3 mx-4 " id="ccw">
+                       <!-- Customer Information -->
+                      <fieldset>
+                        <legend>Customer Information</legend>
+                        <div class="form-row">
+                          <div class="form-group col-md-4">
+                            <label for="customerfName">First Name</label>
+                            <input type="text" class="form-control" id="customerfName" placeholder="Enter customer name">
+                          </div>
+                          <div class="form-group col-md-4">
+                            <label for="customermName">Middle Name</label>
+                            <input type="text" class="form-control" id="customermName" placeholder="Enter customer name">
+                          </div>
+                          <div class="form-group col-md-4">
+                            <label for="customerlName">Last Name</label>
+                            <input type="text" class="form-control" id="customerlName" placeholder="Enter customer name">
+                          </div>
+                        </div>
+                        <div class="form-row">
+                          <div class="form-group col-md-6">
+                            <label for="address">Address</label>
+                            <input type="text" class="form-control" id="address" placeholder="Enter address">
+                          </div>
+                          <div class="form-group col-md-3">
+                            <label for="state">State</label>
+                              <select class="form-control" id="state">
+                                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                <option value="Assam">Assam</option>
+                                <option value="Bihar">Bihar</option>
+                                <option value="Chandigarh">Chandigarh</option>
+                                <option value="Chhattisgarh">Chhattisgarh</option>
+                                <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
+                                <option value="Daman and Diu">Daman and Diu</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Lakshadweep">Lakshadweep</option>
+                                <option value="Puducherry">Puducherry</option>
+                                <option value="Goa">Goa</option>
+                                <option value="Gujarat">Gujarat</option>
+                                <option value="Haryana">Haryana</option>
+                                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                <option value="Jharkhand">Jharkhand</option>
+                                <option value="Karnataka">Karnataka</option>
+                                <option value="Kerala">Kerala</option>
+                                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                <option value="Maharashtra">Maharashtra</option>
+                                <option value="Manipur">Manipur</option>
+                                <option value="Meghalaya">Meghalaya</option>
+                                <option value="Mizoram">Mizoram</option>
+                                <option value="Nagaland">Nagaland</option>
+                                <option value="Odisha">Odisha</option>
+                                <option value="Punjab">Punjab</option>
+                                <option value="Rajasthan">Rajasthan</option>
+                                <option value="Sikkim">Sikkim</option>
+                                <option value="Tamil Nadu">Tamil Nadu</option>
+                                <option value="Telangana">Telangana</option>
+                                <option value="Tripura">Tripura</option>
+                                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                <option value="Uttarakhand">Uttarakhand</option>
+                                <option value="West Bengal">West Bengal</option>
+                                <!-- Add more states as needed -->
+                              </select>
+                          </div>
+                          <div class="form-group col-md-3">
+                            <label for="pcode">Pin Code</label>
+                            <input type="text" class="form-control" id="pcode" placeholder="Enter Pin Code">
+                          </div>
+                        </div>
+                        <div class="form-row">
+                          <div class="form-group col-md-6">
+                            <label for="phoneNumber">Phone Number</label>
+                            <input type="tel" class="form-control" id="phoneNumber" placeholder="Enter phone number">
+                          </div>
+                          <div class="form-group col-md-6">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter email">
+                          </div>
+                        </div>
+                      </fieldset>
+
+                      <!-- Account Information -->
+                      <fieldset>
+                        <div class="form-row">
+                          <legend>Account Information</legend>
+                        <div class="form-group col-md-6">
+                          <label for="accountNumber">Account Number</label>
+                          <input type="text" class="form-control" id="accountNumber" placeholder="Enter account number">
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="bankname">Bank Name</label>
+                          <input type="text" class="form-control" id="bankname" placeholder="Enter Bank Name">
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="transactionHistory">IFSC Code</label>
+                          <input type="text" class="form-control" id="bankifsc" placeholder="Enter IFSC Code">
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="transactionHistory">MICR Code</label>
+                          <input type="text" class="form-control" id="bankmicr" placeholder="Enter MICR Code">
+                        </div>
+                        </div>
+                      </fieldset>
+
+                      <!-- Add more fieldsets as needed -->
+
+                      <button type="submit" class="btn btn-primary ">Submit</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div id="sales" class="section">
+              <h2>Div 3</h2>
+              <p>This is the content of Div 3.</p>
+            </div>
+            <div id="div4" class="section">
+              <h2>Div 4</h2>
+              <p>This is the content of Div 4.</p>
+            </div>
+            <div id="div5" class="section">
+              <h2>Div 5</h2>
+              <p>This is the content of Div 4.</p>
+            </div>
+        </div>
+        </div>
+        
+      </div>
+
+</body>
+
+<!-- sidebar
+<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">Enable both scrolling & backdrop</button> -->
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas Example</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <nav>
+      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Create</button>
+        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Transactions</button>
+        <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Display</button>
+      </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+      <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <div class="card-body">
+          <h1>Creation</h1>
+          <ul>
+            <li><a href="#led" id="ledger-link" onclick="changeInitialSection(this)" class="d-block">Ledger</a></li>
+            <li><a href="#stock" id="stock-link" onclick="changeInitialSection(this)" class="d-block">Stock</a></li>
+            <li><a href="#gopa" id="company-link" onclick="changeInitialSection(this)" class="d-block">Company</a></li>
+            <li><a href="#ogls"  id="profit-center-link" onclick="changeInitialSection(this)" class="d-block">Profit Center</a></li>
+          </ul>
+        </div>
+      <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
+      <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+    </div>
+  </div>
+</div>
+  
+
+
+<!-- toast -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <img src="..." class="rounded me-2" alt="...">
+      <strong class="me-auto">Bootstrap</strong>
+      <small>11 mins ago</small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      Hello, world! This is a toast message.
+    </div>
+  </div>
+</div>
+
+<!-- /clac -->
+<!-- Calculator Modal -->
+<div class="modal fade" id="calculatorModal" tabindex="-1" role="dialog" aria-labelledby="calculatorModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="calculatorModalLabel">Calculator</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <input type="text" class="form-control" id="display" readonly>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col">
+              <button class="btn btn-secondary btn-block" onclick="appendToDisplay('7')">7</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-secondary btn-block" onclick="appendToDisplay('8')">8</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-secondary btn-block" onclick="appendToDisplay('9')">9</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-secondary btn-block" onclick="appendToDisplay('/')">/</button>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col">
+              <button class="btn btn-secondary btn-block" onclick="appendToDisplay('4')">4</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-secondary btn-block" onclick="appendToDisplay('5')">5</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-secondary btn-block" onclick="appendToDisplay('6')">6</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-secondary btn-block" onclick="appendToDisplay('*')">*</button>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col">
+              <button class="btn btn-secondary btn-block" onclick="appendToDisplay('1')">1</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-secondary btn-block" onclick="appendToDisplay('2')">2</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-secondary btn-block" onclick="appendToDisplay('3')">3</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-secondary btn-block" onclick="appendToDisplay('-')">-</button>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col">
+              <button class="btn btn-secondary btn-block" onclick="appendToDisplay('0')">0</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-secondary btn-block" onclick="appendToDisplay('.')">.</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-secondary btn-block" onclick="clearDisplay()">C</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-secondary btn-block" onclick="calculate()">=</button>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col">
+              <button class="btn btn-secondary btn-block" onclick="appendToDisplay('+')">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- notification -->
+<div class="modal" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationModalLabel">Notification</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- <p>You can now receive push notifications.</p> -->
+               <div class="model-noti">
+                <div class="noticontainer">
+                    <div id="notiicon"><i class="fa fa-user"></i></div>
+                    <div id="notitextpart">
+                        <div id="id">tedt goes here</div>
+                        <div id="timestamp">12.00pm</div>
+                    </div>
+                </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+  
+  <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="taskModalLabel">Add Task</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="taskForm">
+            <div class="mb-3">
+              <label for="taskInput" class="form-label">Task</label>
+              <input type="text" class="form-control" id="taskInput" required>
+            </div>
+            <div class="mb-3">
+              <label for="timestampInput" class="form-label">Timestamp</label>
+              <input type="datetime-local" class="form-control" id="timestampInput" required>
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="reminderCheck">
+              <label class="form-check-label" for="reminderCheck">Set Reminder</label>
+            </div>
+            <div class="mb-3" id="reminderTimeInput" style="display: none;">
+              <label for="reminderTime" class="form-label">Reminder Time</label>
+              <input type="datetime-local" class="form-control" id="reminderTime">
+            </div>
+            <button type="submit" class="btn btn-primary">Add</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- short cut window -->
+<div class="modal fade" id="shortcutModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="shortcutModalLabel">Keyboard Shortcuts</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Add your shortcut information here -->
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Code</th>
+              <th scope="col">Name</th>
+              <th scope="col">Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>CCW</td>
+              <td>Creditor Creation Window</td>
+              <td>It is used to create Supplier/Creditor Masters.</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>DCW</td>
+              <td>Customer Creation Window</td>
+              <td>It is used to create Customer masters</td>
+            <tr>
+              <th scope="row">3</th>
+              <td>CCW1</td>
+              <td>Customer Creation Window</td>
+              <td>It is used to create Customer masters</td>
+            </tr>
+           
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+
+<script src="/script.js"></script>
+<script src="/creditorcreationwindow.js"></script>
+<script src="https://apis.google.com/js/api.js"></script>
+<!-- <script src="/scripts/receiptvoucher.js"></script> -->
+
+
+</html>
